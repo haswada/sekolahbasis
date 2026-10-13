@@ -1,1 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laporan Interaktif Pemetaan Sekolah Basis P2B</title>
+<style>
+:root{--green:#344c3b;--green2:#54745a;--mint:#eaf1e9;--ink:#202820;--muted:#657066;--line:#dce4dc;--paper:#f6f8f5;--white:#fff;--gold:#d5a94f}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(125deg,#263d2e,var(--green2));color:#fff;padding:42px max(22px,calc((100% - 1180px)/2)) 38px}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800;color:#dce9dc}
+h1{font-size:clamp(28px,4vw,44px);line-height:1.08;margin:12px 0;max-width:850px;letter-spacing:-.035em}
+header p{max-width:760px;color:#e5ede5;margin:0;font-size:16px}
+main{max-width:1180px;margin:26px auto;padding:0 20px 54px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+button,.btn{border:1px solid var(--line);background:white;color:var(--green);padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+button.active,button.primary{background:var(--green);color:white;border-color:var(--green)}
+button:hover{filter:brightness(.97)}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0}
+.card,.panel{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 3px 12px #233b2b08}
+.card .label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.metric{font-size:32px;line-height:1.2;font-weight:850;letter-spacing:-.04em;margin:7px 0}
+.card p{margin:0;color:var(--muted);font-size:13px}
+h2{font-size:22px;letter-spacing:-.025em;margin:0 0 7px}
+h3{font-size:16px;margin:0 0 8px}
+.section-intro{color:var(--muted);margin:0 0 18px}
+.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin:16px 0}
+.barlist{display:grid;gap:13px;margin-top:18px}
+.barrow{display:grid;grid-template-columns:minmax(145px,220px) 1fr 35px;align-items:center;gap:10px}
+.school{font-size:13px;font-weight:650}
+.track{height:10px;background:#edf1ed;border-radius:20px;overflow:hidden}
+.fill{height:100%;background:var(--green2);border-radius:20px}
+.number{text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
+.highlight{border-left:4px solid var(--gold);background:#fbf8ef;padding:14px 16px;border-radius:0 10px 10px 0;margin-top:15px;font-size:14px}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;background:#fff;min-width:540px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid #e8ede8}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#536256;background:#f0f4ef;cursor:pointer;white-space:nowrap}
+td{font-size:14px}tbody tr:last-child td{border-bottom:0}tbody tr:hover{background:#f8faf7}
+.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:750}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin:15px 0}
+input,select{padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--ink);font:inherit}
+input{flex:1;min-width:220px}
+.pill{display:inline-block;background:var(--mint);color:var(--green);padding:4px 9px;border-radius:99px;font-size:11px;font-weight:800}
+.note{font-size:13px;color:var(--muted)}
+.callout{background:var(--green);color:white;border-radius:16px;padding:22px;margin-top:16px}
+.callout h2{color:white}.callout p{color:#e4ece4;margin-bottom:0}
+footer{max-width:1180px;margin:0 auto;padding:0 20px 28px;color:var(--muted);font-size:12px}
+@media(max-width:800px){.cards{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.barrow{grid-template-columns:minmax(110px,160px) 1fr 28px;gap:7px}.school{font-size:12px}header{padding-top:32px}}
+@media print{body{background:white}.toolbar,.controls,button{display:none!important}header{background:#fff;color:#111;padding:20px 0;border-bottom:2px solid #344c3b}header p,.eyebrow{color:#444}main{padding:0;margin:16px auto}.card,.panel{box-shadow:none;break-inside:avoid}.callout{background:#eee;color:#111}.callout h2,.callout p{color:#111}}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Laporan analisis • P2B Hasanuddin 2027</div>
+  <h1>Pemetaan Sekolah Basis</h1>
+  <p>Membaca kontribusi siswa dari sekolah asal pada seluruh kelas VII–IX dan melihat sinyal angkatan terbaru melalui kelas VII.</p>
+</header>
+<main>
+  <div class="toolbar">
+    <button class="primary" onclick="window.print()">Cetak / Simpan PDF</button>
+    <button onclick="document.getElementById('metode').scrollIntoView({behavior:'smooth'})">Lihat catatan data</button>
+    <button onclick="resetView()">Reset tampilan</button>
+  </div>
 
+  <section class="cards">
+    <div class="card"><div class="label">Sekolah asal teratas historis</div><div class="metric">29 siswa</div><p>SD Negeri 2 Blayu — angka rekap awal seluruh kelas VII–IX.</p></div>
+    <div class="card"><div class="label">Kontributor kelas VII teratas</div><div class="metric">6 siswa</div><p>SD Negeri 2 Blayu, SD Negeri 2 Codo, dan SD Muhammadiyah 07 Wajak.</p></div>
+    <div class="card"><div class="label">Cara membaca</div><div class="metric">2 sudut</div><p>Rekam jejak historis + kontribusi angkatan terbaru, bukan jumlah total saja.</p></div>
+  </section>
+
+  <section class="grid2">
+    <div class="panel">
+      <h2>Kontribusi seluruh kelas</h2>
+      <p class="section-intro">Siswa kelas VII, VIII, dan IX berdasarkan rekap awal. Urutan dari jumlah terbesar.</p>
+      <div id="barsAll" class="barlist"></div>
+    </div>
+    <div class="panel">
+      <h2>Angkatan terbaru · kelas VII</h2>
+      <p class="section-intro">Sekolah dengan kontribusi kelas VII yang menonjol dalam rekap awal.</p>
+      <div id="barsVII" class="barlist"></div>
+      <div class="highlight"><strong>Temuan awal:</strong> tiga sekolah sama-sama menyumbang 6 siswa kelas VII. Ini sinyal kuat untuk ditinjau bersama data komunikasi, minat, dan kesiapan kerja sama.</div>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:16px">
+    <h2>Jelajahi data sekolah</h2>
+    <p class="section-intro">Cari nama sekolah, ubah sudut pandang, atau klik judul kolom untuk mengurutkan tabel.</p>
+    <div class="controls">
+      <input id="search" type="search" placeholder="Cari nama sekolah..." oninput="renderTable()">
+      <select id="view" onchange="renderTable()">
+        <option value="all">Jumlah seluruh kelas VII–IX</option>
+        <option value="vii">Jumlah kelas VII saja</option>
+      </select>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th onclick="sortBy('name')">Sekolah asal ↕</th><th onclick="sortBy('all')" class="num">Seluruh kelas ↕</th><th onclick="sortBy('vii')" class="num">Kelas VII ↕</th><th>Catatan awal</th></tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <p class="note" id="countNote" style="margin-top:12px"></p>
+  </section>
+
+  <section class="grid2">
+    <div class="panel">
+      <h2>Interpretasi strategi</h2>
+      <h3><span class="pill">Prioritas ditinjau</span></h3>
+      <p><strong>SD Negeri 2 Blayu, SD Negeri 2 Codo, dan SD Muhammadiyah 07 Wajak</strong> terlihat menjanjikan karena kontribusi kelas VII-nya sama-sama tinggi dalam rekap awal.</p>
+      <h3 style="margin-top:16px"><span class="pill">Pertahankan hubungan</span></h3>
+      <p><strong>SD Negeri 1 Wajak dan SD Negeri 4 Wajak</strong> punya rekam jejak historis besar. Kontribusi kelas VII yang lebih rendah perlu ditelusuri, bukan langsung dianggap tidak potensial.</p>
+      <h3 style="margin-top:16px"><span class="pill">Pantau perkembangan</span></h3>
+      <p><strong>SD Negeri 3 Codo</strong> memiliki sinyal angkatan terbaru yang menarik relatif terhadap rekam jejak totalnya.</p>
+    </div>
+    <div class="panel">
+      <h2>Usulan kategori kerja</h2>
+      <table style="min-width:0">
+        <tbody>
+          <tr><td><strong>Basis prioritas</strong></td><td>Historis tinggi dan angkatan terbaru tetap kuat.</td></tr>
+          <tr><td><strong>Basis dipertahankan</strong></td><td>Historis tinggi, tetapi kelas VII terbaru menurun.</td></tr>
+          <tr><td><strong>Sekolah potensial</strong></td><td>Jumlah historis sedang, kelas VII terbaru menunjukkan sinyal baik.</td></tr>
+          <tr><td><strong>Sekolah sasaran</strong></td><td>Belum ada rekam jejak kuat; fokus pada presentasi dan tindak lanjut.</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Kategori final tetap perlu disandingkan dengan daftar 16 sekolah basis yang sudah ditetapkan panitia.</p>
+    </div>
+  </section>
+
+  <section class="callout">
+    <h2>Rekomendasi untuk rapat P2B</h2>
+    <p>Gunakan angka ini untuk menentukan sekolah yang perlu ditinjau lebih dahulu, bukan sebagai keputusan otomatis. Setelah nama sekolah diseragamkan dan jumlah diverifikasi, tetapkan model tindak lanjut: kemitraan, kunjungan presentasi, atau evaluasi hubungan.</p>
+  </section>
+
+  <section id="metode" class="panel" style="margin-top:16px">
+    <h2>Catatan data dan batasan</h2>
+    <ul>
+      <li>Angka yang ditampilkan adalah <strong>rekap awal</strong> dari daftar yang diberikan dan ringkasan analisis sebelumnya, belum merupakan hasil audit otomatis seluruh baris.</li>
+      <li>Nama yang bervariasi penulisannya—misalnya MI Al Hidayah/MI Alhidayah, MI An Nashr/MI Annashr, atau variasi ejaan Minatur/Minnatur Rohman—perlu dinormalisasi sebelum penghitungan resmi.</li>
+      <li>Kolom kelas VII dimaksudkan sebagai indikator angkatan terbaru pada data yang diberikan; untuk memastikan tahun masuk, cocokkan dengan tahun ajaran dan data penerimaan.</li>
+      <li>Jangan menyimpulkan penyebab naik-turunnya jumlah hanya dari tabel ini. Perlu data jumlah siswa kelas 6/9 di sekolah asal, jadwal presentasi, tingkat minat, dan tindak lanjut CRM.</li>
+    </ul>
+    <p class="note"><strong>Prinsip keputusan:</strong> data historis membantu menemukan peluang; komunikasi aktif, minat calon siswa, dan kesediaan sekolah bekerja sama menentukan strategi berikutnya.</p>
+  </section>
+</main>
+<footer>Dokumen kerja internal • Pemetaan sekolah asal P2B Hasanuddin 2027 • Dapat dicetak melalui tombol “Cetak / Simpan PDF”.</footer>
+<script>
+const data = [
+{name:"SD Negeri 2 Blayu",all:29,vii:6,note:"Historis tinggi; kelas VII kuat"},
+{name:"SD Negeri 1 Wajak",all:20,vii:3,note:"Historis tinggi; tinjau angkatan terbaru"},
+{name:"SD Negeri 2 Codo",all:16,vii:6,note:"Historis tinggi; kelas VII kuat"},
+{name:"SD Negeri 4 Wajak",all:14,vii:1,note:"Historis tinggi; tinjau angkatan terbaru"},
+{name:"SD Negeri 1 Blayu",all:11,vii:2,note:"Kontribusi historis menengah"},
+{name:"SD Muhammadiyah 07 Wajak",all:11,vii:6,note:"Kelas VII kuat"},
+{name:"MI Hidayatul Muttaqin",all:10,vii:2,note:"Ada kontribusi lintas angkatan"},
+{name:"SD Negeri 3 Codo",all:7,vii:4,note:"Sinyal kelas VII menarik"},
+{name:"SD Negeri 1 Bringin",all:5,vii:1,note:"Pantau sebagai sekolah potensial"},
+{name:"SD Negeri 2 Sukolilo",all:5,vii:2,note:"Pantau sebagai sekolah potensial"}
+];
+let sortKey="all",sortDir=-1;
+function makeBars(target, rows, key, max) {
+  document.getElementById(target).innerHTML = rows.map(d=>`<div class="barrow"><div class="school">${d.name}</div><div class="track"><div class="fill" style="width:${Math.max(3,d[key]/max*100)}%"></div></div><div class="number">${d[key]}</div></div>`).join("");
+}
+function renderTable(){
+ const q=document.getElementById("search").value.toLowerCase();
+ const view=document.getElementById("view").value;
+ const rows=data.filter(d=>d.name.toLowerCase().includes(q)).sort((a,b)=>{
+  let c=sortKey==="name"?a.name.localeCompare(b.name,"id"):a[sortKey]-b[sortKey];
+  return c*sortDir;
+ });
+ document.getElementById("tableBody").innerHTML=rows.map(d=>`<tr><td><strong>${d.name}</strong></td><td class="num">${d.all}</td><td class="num">${d.vii}</td><td>${d.note}</td></tr>`).join("");
+ document.getElementById("countNote").textContent=`Menampilkan ${rows.length} dari ${data.length} sekolah pada ringkasan awal. Sudut pandang aktif: ${view==="all"?"seluruh kelas VII–IX":"kelas VII saja"}.`;
+}
+function sortBy(key){if(sortKey===key)sortDir*=-1;else{sortKey=key;sortDir=key==="name"?1:-1}renderTable()}
+function resetView(){document.getElementById("search").value="";document.getElementById("view").value="all";sortKey="all";sortDir=-1;renderTable()}
+makeBars("barsAll",[...data].sort((a,b)=>b.all-a.all),"all",29);
+makeBars("barsVII",[...data].filter(d=>d.vii>=2).sort((a,b)=>b.vii-a.vii||b.all-a.all),"vii",6);
+renderTable();
+</script>
+</body>
+</html>
